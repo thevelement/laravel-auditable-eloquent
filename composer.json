@@ -1,6 +1,7 @@
 {
     "name": "thevelement/laravel-auditable-eloquent",
-    "description": "",
+    "description": "Extension to the Laravel Schema Builder to support audit-tracking fields in models.",
+    "license": "MIT",
     "authors": [
         {
             "name": "Vincent Santa Maria",
