@@ -1,6 +1,9 @@
-<?php namespace Thevelement\LaravelAuditableEloquent\Facades;
+<?php 
+
+namespace Thevelement\LaravelAuditableEloquent\Facades;
 
 use Thevelement\LaravelAuditableEloquent\LaravelAuditableSchemaBuilder;
+use Thevelement\LaravelAuditableEloquent\LaravelAuditableMySqlSchemaBuilder;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -19,7 +22,14 @@ class LaravelAuditableSchema extends Facade {
 		$connection = static::$app['db']->connection($name);
 		if (is_null($connection->getSchemaGrammar())) $connection->useDefaultSchemaGrammar();
 		
-		return new LaravelAuditableSchemaBuilder($connection);
+		if ($connection->getConfig('driver') == 'mysql')
+		{
+			return new LaravelAuditableMySqlSchemaBuilder($connection);
+		}
+		else
+		{
+			return new LaravelAuditableSchemaBuilder($connection);
+		}
 	}
 
 	/**
@@ -32,7 +42,14 @@ class LaravelAuditableSchema extends Facade {
 		$connection = static::$app['db']->connection();
 		if (is_null($connection->getSchemaGrammar())) $connection->useDefaultSchemaGrammar();
 		
-		return new LaravelAuditableSchemaBuilder($connection);
+		if ($connection->getConfig('driver') == 'mysql')
+		{
+			return new LaravelAuditableMySqlSchemaBuilder($connection);
+		}
+		else
+		{
+			return new LaravelAuditableSchemaBuilder($connection);
+		}
 	}
 
 }
