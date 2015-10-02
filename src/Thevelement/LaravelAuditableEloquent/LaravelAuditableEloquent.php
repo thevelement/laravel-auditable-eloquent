@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 <?php 
 
 namespace Thevelement\LaravelAuditableEloquent;
+=======
+<?php namespace Thevelement\LaravelAuditableEloquent;
+>>>>>>> e38d80c49ed2914c43cfe285536594345062eade
 
 use Illuminate\Database\Eloquent\Model as BaseEloquent;
 use \Auth;
@@ -95,6 +99,10 @@ class LaravelAuditableEloquent extends BaseEloquent {
 	 */
 	public function getUpdatedByColumn()
 	{
+<<<<<<< HEAD
 		return static::UPDATED_BY;
+=======
+		return static::UPDATED_By;
+>>>>>>> e38d80c49ed2914c43cfe285536594345062eade
 	}
 }
