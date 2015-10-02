@@ -16,11 +16,5 @@
             "Thevelement\\LaravelAuditableEloquent": "src/Thevelement"
         }
     },
-    "minimum-stability": "stable",
-	"repositories":	[
-		{
-			"type": "vcs",
-			"url": "src/Thevelement/LaravelAuditableEloquent"
-		}
-	],
+    "minimum-stability": "stable"
 }
