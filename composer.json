@@ -1,0 +1,20 @@
+{
+    "name": "thevelement/laravel-auditable-eloquent",
+    "description": "",
+    "authors": [
+        {
+            "name": "Vincent Santa Maria",
+            "email": "vinny@thevelement.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+		"laravel/framework": "5.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Thevelement\\LaravelAuditableEloquent\\": "src/Thevelement"
+        }
+    },
+    "minimum-stability": "stable"
+}
