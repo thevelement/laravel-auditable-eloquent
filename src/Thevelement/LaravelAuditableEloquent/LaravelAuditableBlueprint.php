@@ -38,6 +38,7 @@ class LaravelAuditableBlueprint extends Blueprint
 			$this->timestamp('deleted_at')->nullable();
 			if ( ! is_null($auditIdType)) $this->audit(['deleted_by'], $auditIdType);
 		} else {
+			$this->timestamp('deleted_at')->nullable();
 			$this->timestamp('restored_at')->nullable();
 			if ( ! is_null($auditIdType)) $this->audit(['deleted_by', 'restored_by'], $auditIdType);
 		}
