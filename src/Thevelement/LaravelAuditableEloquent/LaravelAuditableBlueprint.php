@@ -29,18 +29,18 @@ class LaravelAuditableBlueprint extends Blueprint
      * Add a "deleted at" timestamp for the table.
 	 * Option to include a "deleted_by" field for auditing purposes.
      *
-	 * @param  bool|string  $auditIdType
+	 * @param  bool  $trackRestore
+	 * @param  null|string  $auditIdType
      * @return \Illuminate\Support\Fluent
      */
 	public function softDeletes($trackRestore = false, $auditIdType = null)
 	{
-		if ( ! $trackRestore) {
-			$this->timestamp('deleted_at')->nullable();
-			if ( ! is_null($auditIdType)) $this->audit(['deleted_by'], $auditIdType);
-		} else {
-			$this->timestamp('deleted_at')->nullable();
+		$this->timestamp('deleted_at')->nullable();
+		if ( ! is_null($auditIdType)) $this->audit(['deleted_by'], $auditIdType);
+		
+		if ($trackRestore) {
 			$this->timestamp('restored_at')->nullable();
-			if ( ! is_null($auditIdType)) $this->audit(['deleted_by', 'restored_by'], $auditIdType);
+			if ( ! is_null($auditIdType)) $this->audit(['restored_by'], $auditIdType);
 		}
 	}
 	
