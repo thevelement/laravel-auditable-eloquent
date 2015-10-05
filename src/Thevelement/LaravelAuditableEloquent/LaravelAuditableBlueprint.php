@@ -32,12 +32,15 @@ class LaravelAuditableBlueprint extends Blueprint
 	 * @param  bool|string  $auditIdType
      * @return \Illuminate\Support\Fluent
      */
-	public function softDeletes($auditIdType = null)
+	public function softDeletes($trackRestore = false, $auditIdType = null)
 	{
-		$this->timestamp('deleted_at')->nullable();
-		$this->timestamp('restored_at')->nullable();
-		
-		if ( ! is_null($auditIdType)) $this->audit(['deleted_by', 'restored_by'], $auditIdType);
+		if ( ! $trackRestore) {
+			$this->timestamp('deleted_at')->nullable();
+			if ( ! is_null($auditIdType)) $this->audit(['deleted_by'], $auditIdType);
+		} else {
+			$this->timestamp('restored_at')->nullable();
+			if ( ! is_null($auditIdType)) $this->audit(['deleted_by', 'restored_by'], $auditIdType);
+		}
 	}
 	
 	public function audit($track = ['created_by', 'updated_by', 'deleted_by', 'restored_by'], $auditIdType = 'unsignedInteger')

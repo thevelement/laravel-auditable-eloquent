@@ -59,7 +59,13 @@ trait LaravelAuditableSoftDeletes
 	{
 		$query = $this->newQuery()->where($this->getKeyName(), $this->getKey());
 		$this->{$this->getDeletedAtColumn()} = $time = $this->freshTimestamp();
-		$query->update(array_merge([$this->{getDeletedAtColumn()} => $this->fromDateTime($time), $this->{getRestoredAtColumn()} => null], ($this->auditing ? [$this->{getDeletedByColumn()} => Auth::user()->id, $this->{getRestoredByColumn()} => null] : [])));
+		$updateFields = array_merge([$this->{getDeletedAtColumn()} => $this->fromDateTime($time), ($this->auditing ? [$this->{getDeletedByColumn()} => Auth::user()->id] : [])]);
+		
+		if (property_exists($this, $this->getRestoredAtColumn())) {
+			$updateFields = array_merge($updateFields, [$this->{getRestoredAtColumn()} => null, $this->{getRestoredByColumn()} => null]);	
+		}
+		
+		$query->update($updateFields);
 	}
 
 	/**
