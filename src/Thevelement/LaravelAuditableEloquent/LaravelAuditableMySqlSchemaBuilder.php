@@ -3,10 +3,10 @@
 namespace Thevelement\LaravelAuditableEloquent;
 
 use Closure;
-use Debugbar;
 use Illuminate\Database\Schema\MySqlBuilder;
 
-class LaravelAuditableMySqlSchemaBuilder extends MySqlBuilder {
+class LaravelAuditableMySqlSchemaBuilder extends MySqlBuilder
+{
 	/**
      * Create a new command set with a Closure.
      *

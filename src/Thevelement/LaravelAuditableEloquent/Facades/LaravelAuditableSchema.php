@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @see \Thevelement\LaravelAuditableEloquent\LaravelAuditableSchemaBuilder
  */
-class LaravelAuditableSchema extends Facade {
+class LaravelAuditableSchema extends Facade
+{
 
 	/**
 	 * Get a schema builder instance for a connection.
@@ -22,12 +23,9 @@ class LaravelAuditableSchema extends Facade {
 		$connection = static::$app['db']->connection($name);
 		if (is_null($connection->getSchemaGrammar())) $connection->useDefaultSchemaGrammar();
 		
-		if ($connection->getConfig('driver') == 'mysql')
-		{
+		if ($connection->getConfig('driver') == 'mysql') {
 			return new LaravelAuditableMySqlSchemaBuilder($connection);
-		}
-		else
-		{
+		} else {
 			return new LaravelAuditableSchemaBuilder($connection);
 		}
 	}
@@ -42,14 +40,10 @@ class LaravelAuditableSchema extends Facade {
 		$connection = static::$app['db']->connection();
 		if (is_null($connection->getSchemaGrammar())) $connection->useDefaultSchemaGrammar();
 		
-		if ($connection->getConfig('driver') == 'mysql')
-		{
+		if ($connection->getConfig('driver') == 'mysql') {
 			return new LaravelAuditableMySqlSchemaBuilder($connection);
-		}
-		else
-		{
+		} else {
 			return new LaravelAuditableSchemaBuilder($connection);
 		}
 	}
-
 }

@@ -1,8 +1,11 @@
-<?php namespace Thevelement\LaravelAuditableEloquent;
+<?php
 
-use Illuminate\Support\Facades\Auth;
+namespace Thevelement\LaravelAuditableEloquent;
 
-trait LaravelAuditableSoftDeletes {
+use Auth;
+
+trait LaravelAuditableSoftDeletes
+{
 
 	/**
 	 * Indicates if the model is currently force deleting.
@@ -29,9 +32,7 @@ trait LaravelAuditableSoftDeletes {
 	public function forceDelete()
 	{
 		$this->forceDeleting = true;
-
 		$this->delete();
-
 		$this->forceDeleting = false;
 	}
 
@@ -42,8 +43,7 @@ trait LaravelAuditableSoftDeletes {
 	 */
 	protected function performDeleteOnModel()
 	{
-		if ($this->forceDeleting)
-		{
+		if ($this->forceDeleting) {
 			return $this->withTrashed()->where($this->getKeyName(), $this->getKey())->forceDelete();
 		}
 
@@ -58,10 +58,8 @@ trait LaravelAuditableSoftDeletes {
 	protected function runSoftDelete()
 	{
 		$query = $this->newQuery()->where($this->getKeyName(), $this->getKey());
-
 		$this->{$this->getDeletedAtColumn()} = $time = $this->freshTimestamp();
-
-		$query->update(array_merge(array($this->getDeletedAtColumn() => $this->fromDateTime($time)), ($this->auditing ? array($this->getDeletedAtColumn() => Auth::user()->id) : array())));
+		$query->update(array_merge([$this->{getDeletedAtColumn()} => $this->fromDateTime($time), $this->{getRestoredAtColumn()} => null], ($this->auditing ? [$this->{getDeletedByColumn()} => Auth::user()->id, $this->{getRestoredByColumn()} => null] : [])));
 	}
 
 	/**
@@ -74,20 +72,19 @@ trait LaravelAuditableSoftDeletes {
 		// If the restoring event does not return false, we will proceed with this
 		// restore operation. Otherwise, we bail out so the developer will stop
 		// the restore totally. We will clear the deleted timestamp and save.
-		if ($this->fireModelEvent('restoring') === false)
-		{
+		if ($this->fireModelEvent('restoring') === false) {
 			return false;
 		}
 
-		$this->{$this->getDeletedAtColumn()} = $this->{$this->getDeletedAtColumn()} = null;
+		$this->{$this->getDeletedAtColumn()} = $this->{$this->getDeletedByColumn()} = null;
+		$this->{$this->getRestoredAtColumn()} = $this->fromDateTime($this->freshTimeStamp());
+		$this->{$this->getRestoredByColumn()} = Auth::user()->id;
 
 		// Once we have saved the model, we will fire the "restored" event so this
 		// developer will do anything they need to after a restore operation is
 		// totally finished. Then we will return the result of the save call.
 		$this->exists = true;
-
 		$result = $this->save();
-
 		$this->fireModelEvent('restored', false);
 
 		return $result;
@@ -121,7 +118,6 @@ trait LaravelAuditableSoftDeletes {
 	public static function onlyTrashed()
 	{
 		$instance = new static;
-
 		$column = $instance->getQualifiedDeletedAtColumn();
 
 		return $instance->newQueryWithoutScope(new SoftDeletingScope)->whereNotNull($column);
@@ -170,6 +166,26 @@ trait LaravelAuditableSoftDeletes {
 	}
 
 	/**
+	 * Get the name of the "restored at" column.
+	 *
+	 * @return string
+	 */
+	public function getRestoredAtColumn()
+	{
+		return defined('static::RESTORED_AT') ? static::RESTORED_AT : 'restored_at';
+	}
+	
+	/**
+	 * Get the name of the "restored by" column.
+	 *
+	 * @return string
+	 */
+	public function getRestoredByColumn()
+	{
+		return defined('static::RESTORED_BY') ? static::RESTORED_BY : 'restored_by';
+	}
+	
+	/**
 	 * Get the fully qualified "deleted at" column.
 	 *
 	 * @return string
@@ -189,4 +205,23 @@ trait LaravelAuditableSoftDeletes {
 		return $this->getTable().'.'.$this->getDeletedByColumn();
 	}
 
+	/**
+	 * Get the fully qualified "restored at" column.
+	 *
+	 * @return string
+	 */
+	public function getQualifiedRestoredAtColumn()
+	{
+		return $this->getTable().'.'.$this->getRestoredAtColumn();
+	}
+	
+	/**
+	 * Get the fully qualified "restored by" column.
+	 *
+	 * @return string
+	 */
+	public function getQualifiedRestoredByColumn()
+	{
+		return $this->getTable().'.'.$this->getRestoredByColumn();
+	}
 }

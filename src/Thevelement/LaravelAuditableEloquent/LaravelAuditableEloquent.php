@@ -2,10 +2,11 @@
 
 namespace Thevelement\LaravelAuditableEloquent;
 
+use Auth;
 use Illuminate\Database\Eloquent\Model as BaseEloquent;
-use \Auth;
 
-class LaravelAuditableEloquent extends BaseEloquent {
+class LaravelAuditableEloquent extends BaseEloquent
+{
 	/**
 	 * Indicates if we're auditing creation/updates/deletions
 	 *
@@ -35,23 +36,19 @@ class LaravelAuditableEloquent extends BaseEloquent {
 	{
 		$time = $this->freshTimestamp();
 
-		if ( ! $this->isDirty(static::UPDATED_AT))
-		{
+		if ( ! $this->isDirty(static::UPDATED_AT)) {
 			$this->setUpdatedAt($time);
 		}
 		
-		if ( $this->auditing && ! $this->isDirty(static::UPDATED_BY))
-		{
+		if ( $this->auditing && ! $this->isDirty(static::UPDATED_BY)) {
 			$this->setUpdatedBy(Auth::user()->id);
 		}
 
-		if ( ! $this->exists && ! $this->isDirty(static::CREATED_AT))
-		{
+		if ( ! $this->exists && ! $this->isDirty(static::CREATED_AT)) {
 			$this->setCreatedAt($time);
 		}
 		
-		if ( $this->auditing && ! $this->isDirty(static::CREATED_BY))
-		{
+		if ( $this->auditing && ! $this->isDirty(static::CREATED_BY)) {
 			$this->setCreatedBy(Auth::user()->id);
 		}
 	}
