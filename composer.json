@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Thevelement\\LaravelAuditableEloquent\\": "src/Thevelement"
+            "Thevelement\\LaravelAuditableEloquent\\": "src/Thevelement/LaravelAuditableEloquent/"
         }
     },
     "minimum-stability": "stable"
