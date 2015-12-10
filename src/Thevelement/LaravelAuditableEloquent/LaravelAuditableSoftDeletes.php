@@ -2,8 +2,6 @@
 
 namespace Thevelement\LaravelAuditableEloquent;
 
-use Auth;
-
 trait LaravelAuditableSoftDeletes
 {
 
@@ -59,7 +57,7 @@ trait LaravelAuditableSoftDeletes
 	{
 		$query = $this->newQuery()->where($this->getKeyName(), $this->getKey());
 		$this->{$this->getDeletedAtColumn()} = $time = $this->freshTimestamp();
-		$updateFields = array_merge([$this->{getDeletedAtColumn()} => $this->fromDateTime($time), ($this->auditing ? [$this->{getDeletedByColumn()} => Auth::user()->id] : [])]);
+		$updateFields = array_merge([$this->{getDeletedAtColumn()} => $this->fromDateTime($time), ($this->auditing ? [$this->{getDeletedByColumn()} => auth()->user()->id] : [])]);
 		
 		if (property_exists($this, $this->getRestoredAtColumn())) {
 			$updateFields = array_merge($updateFields, [$this->{getRestoredAtColumn()} => null, $this->{getRestoredByColumn()} => null]);	
@@ -84,7 +82,7 @@ trait LaravelAuditableSoftDeletes
 
 		$this->{$this->getDeletedAtColumn()} = $this->{$this->getDeletedByColumn()} = null;
 		$this->{$this->getRestoredAtColumn()} = $this->fromDateTime($this->freshTimeStamp());
-		$this->{$this->getRestoredByColumn()} = Auth::user()->id;
+		$this->{$this->getRestoredByColumn()} = auth()->user()->id;
 
 		// Once we have saved the model, we will fire the "restored" event so this
 		// developer will do anything they need to after a restore operation is
