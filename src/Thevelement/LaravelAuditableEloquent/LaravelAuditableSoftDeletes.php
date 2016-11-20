@@ -2,6 +2,8 @@
 
 namespace Thevelement\LaravelAuditableEloquent;
 
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
 trait LaravelAuditableSoftDeletes
 {
 
@@ -17,7 +19,7 @@ trait LaravelAuditableSoftDeletes
 	 *
 	 * @return void
 	 */
-	public static function bootSoftDeletes()
+	public static function bootLaravelAuditableSoftDeletes()
 	{
 		static::addGlobalScope(new SoftDeletingScope);
 	}
